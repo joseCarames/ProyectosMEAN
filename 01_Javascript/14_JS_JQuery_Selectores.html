@@ -1,0 +1,313 @@
+<html>
+
+<head></head>
+
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+
+//Si la función $ recibe el objeto document, lo enriquece aportándole nuevas funciones como ready.
+//ready() se 
+$(document).ready = function(){
+    pruebas();
+};
+    
+//Si a la funcución $ le pasamos una función como parámetro ésta se asigna a document.ready
+$(function(){
+    pruebas();    
+});
+
+
+function pruebas(){
+
+    //Selectores: nos sirven para localizar los nodos del árbol DOM
+    let todosLosNodos = $("*");//Devuelve todos los nodos
+    console.log("Todos:"+todosLosNodos);
+    
+
+    /////////////////
+    //Buscar por ID//
+    /////////////////
+    //Si le pasamos un parámetro que comienza por # busca por id
+    console.log($("#div1"));
+    //Aunque el selector sólo encuentre un nodo siempre devuelve un 'array'
+    console.log("================================================");
+    console.log($("#txt1"));//Objeto JQuery
+    console.log($("#txt1")[0]);//nodo
+    console.log($("#txt1").get(0)); //Hace lo mismo
+    let nodo1 = document.getElementById("txt1");
+    let nodo2 = $("#txt1")[0];
+    nodo1.value = "Viernes";
+
+    ///////////////////////
+    //Buscar por etiqueta//
+    ///////////////////////
+    //Pasamos por parámetro el nombre de la etiqueta
+    $("a");//devuelve un array con todos los enlaces del documento
+    $("input") //Devuelve todos los input que haya en el documento
+    //Podemos utilizar el resultado de una búsqueda como si fuera un array normal
+    //El objeto JQuery que devuelve la función $ es muy similar a un array
+    let nodos = $("input");
+    console.log(nodos.length);
+    for(let a=1;a<nodos.length;a++){
+        nodos[a].value = a+1;
+    }
+    //Pero lo que nos están devolviendo en un objeto de JQuery que se parece a un array pero que cuenta 
+    //con más propiedades y funciones
+
+    //val() cambia el valor a todos los nodos
+    $("input").val("AAA");//a cada elemento del array se le aplica la función
+                        //val(), que asigna el value
+    //El equivalente en JS a lo anterior sería
+    /*let nodosInput = document.getElementsByTagName("input");
+    nodosInput.forEach(function(elem){
+        elem.value = "AAA";
+    } );
+    */
+
+    /////////////////////
+    //Buscar por estilo//
+    /////////////////////
+    //Si el selector que enviamos a '$' empieza por el '.' se buscarán los nodos que tengan ese estilo
+    $(".titulo").css("color","lightGreen");
+    //en JavaScript sería algo así...
+    // let titulo = document.getElementById("titulo");
+    // titulo.style = "color:lightGreen"... o algo así
+
+    ///////////////////////
+    //Buscar por atributo//
+    ///////////////////////
+    $("[dato]").css("border","3px solid green"); //Busca nodos que tengan el atributo 'dato'
+    $("[type=button]").val("Botón");//Nodos con un atributo cuyo valor es X
+    $("[dato!=1000]"); //El valor del atributo distinto de 
+    $("[dato*=111]"); //El valor del atributo contiene '111'
+    $("[dato$=222]"); //El valor del atributo termina por '222'
+    $("[dato^=333]"); //El valor comienza por '333'
+    $("[dato~=444]"); //El valor contiene la palabra 444. Es decir ' 444 '
+
+    //Selectores para select /checkBox etc
+    //selecciona las opciones seleccionadas en todos los desplegables de la página
+    let opciones = $("select option:selected");
+    for(let a=0;a<opciones.length;a++){
+        console.log("Opciones:"+opciones[a].value);
+    }
+    
+    //Idem para los checkbox
+    $("input:checked");//Lista con los checkbox y radiobuttons que estñen seleccionados
+    $("input [type=checkbox]:checked");
+
+    ///////////////////////////
+    //Concatenando selectores//
+    ///////////////////////////
+    //Si la coma está dentro del selector se suman
+    $("[type=button],[type=text]");
+    //Si queremos que se cumplan todos los selctores se ponen juntos
+    //seleccionamos los input que tienen el atributo movida
+    $("input[movida]").css("border","3px solid red");
+
+    //Seleccionando hijos, nietos...
+    //Quiero los nodos input que sean hijos, nietos, biznietos... del nodo cuyo id="div3"
+    $("#div3 input").css("border","epx solid blue");
+
+    //Selectores de hijos directos
+    $("#div3 > input").css("border","epx light blue");
+
+    //Otra sintáxis 
+    $("input","#div3");//Nótese la inversión del orden
+
+
+    //Búsqueda de nodos de TEXTO
+    $("h1:contains('JQuery gran reserva')").css("background-color","orange");
+
+    //Trabajando con los índices del array de nodos que devuelve un selector
+    $("tabla")[3];//El 4º tr pero nos han dado todos
+    $("tabla").get(3);//Idem
+
+    $("#tabla tr:even").css("background-color","yellow");//even:pares
+    $("#tabla tr:odd").css("background-color","#FABADA");//odd:impares
+    $("#tabla tr:eq(4)").css("background-color","blue");//eq: igual a 
+    $("#tabla tr:lt(3)").css("background-color","green");//lt:less than
+    $("#tabla tr:gt(8)").css("background-color","red");//gt: greater than
+
+    //Nodos de tipo input que estén desabilitados
+    $("input:disabled");
+    //Nodos que no tengan hijos directos
+    $("div:empty");
+
+
+    $("#div1").html("HOLA");//cambiamos el valor del elemento html
+    //Aunque no lo pongamos en realidad estamos cambiando el valor de todos los nodos con id="div1", 
+    //que en éste caso es uno, equivaldría a:
+    let div1 = $("#div1")[0];
+    // div1.html("HOLA");//CUIDADO ÉSTO NOOOOO ya que las funciones se ejecutan sobre el objeto JQuery, los nodos no la tienen
+    div1.innerHTML="HOLA";//hahora sí
+
+    //Pero se la podemos añadir a un nodo concreto
+    let nodo3 = document.getElementById("div1");
+    nodo3.html = function(html){
+        this.innerHTML = html;
+    }
+    nodo3.html("Siete caballos vienen de bonanza...");
+    
+    //Buscar por estilo, con el punto
+    //
+    $(".XXX");
+
+    //Podemos 'concatenar' selectores. 
+    //Ponemos BBB en todos los input del form2
+    $("input", "#form2").val("BBB");
+
+    
+    //Creando nodos
+    // document.getElementById("div2").innerHTML = 
+    //     "<table border='1'><tr><td>Ay Mamá</td></tr></table>";
+    
+    let nodos2 = $("<table border='1'><tr><td>Ay Mamá</td></tr></table>");
+    console.log(nodos2);
+
+    //document.getElementById("div2").appendChild(nodos2);
+
+}
+
+
+</script>
+
+
+<body>
+
+    <h1 class="titulo">JQuery gran reserva</h1>
+
+    <hr/>
+
+    <p id="form1">
+        <input type="txt" id="txt1">
+        <input type="txt" id="txt2" movida="movida"><br/><br/>
+        <input type="txt" id="txt3">
+        <input type="txt" id="txt4" movida="movida">
+    </p>
+
+    <hr/>
+
+    <p id="form2">
+        <input type="txt" id="txt5" dato="101">
+        <input type="txt" id="txt6" movida="movida"><br/><br/>
+        <input type="txt" id="txt7">
+        <input type="txt" id="txt8" movida="movida">
+        <input type="button" id="btn1" value="Boton1"/>
+        <input type="button" id="btn2" value="Boton2"/>
+        <input type="button" id="btn3" value="Boton3"/>
+        <input type="button" id="btn4" value="Boton4"/>
+    </p>
+    
+    <hr/>
+    
+    <div id="div1"></div>
+    
+    <hr/>
+    
+    <div id="div2">
+        <select id="ciudad">
+            <option>Getafe</option>
+            <option>Madrid</option>
+            <option>León</option>
+            <option>Guimaraës</option>
+        </select>
+        
+        <select id="Colores">
+            <option>Rojo</option>
+            <option>Verde</option>
+            <option>Azul</option>
+            <option>Amarillo</option>
+        </select>
+
+        <input type="checkbox" id="chk1"/>
+        <input type="checkbox" id="chk2"/>
+        <input type="checkbox" id="chk3"/>
+        <input type="checkbox" id="chk4"/>
+        <input type="checkbox" id="chk5"/>
+        <input type="checkbox" id="chk6"/>
+    
+    </div>
+    
+    <hr/>
+
+    <div id="div3">
+        <input type="txt" id="txt9">
+        <input type="txt" id="txt10" movida="movida"><br/><br/>
+        <div id="div4">
+            <input type="txt" id="txt11">
+            <input type="txt" id="txt12" movida="movida">
+        </div>
+    </div>
+    <hr/>
+
+    <div id="div5">
+        <table id="tabla" border="1">
+            <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>C</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td>14</td>
+                <td>15</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td>17</td>
+                <td>18</td>
+            </tr>
+            <tr>
+                <td>19</td>
+                <td>20</td>
+                <td>21</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td>23</td>
+                <td>24</td>
+            </tr>
+            <tr>
+                <td>25</td>
+                <td>26</td>
+                <td>27</td>
+            </tr>
+            <tr>
+                <td>28</td>
+                <td>29</td>
+                <td>30</td>
+            </tr>
+            <tr>
+                <td>31</td>
+                <td>32</td>
+                <td>33</td>
+            </tr>
+
+            
+        </table>
+    </div>
+
+</body>
+
+
+</html>

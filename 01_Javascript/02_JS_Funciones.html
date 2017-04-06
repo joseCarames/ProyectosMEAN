@@ -1,0 +1,102 @@
+<html>
+    
+<head>
+
+</head>
+
+<script type="text/javascript">
+
+//Declaradas y asociadas a un objeto o sin él
+//No indican si devuelven algo o si son void
+function saludar(){
+    //alert("Bo que pacha")
+    console.log("Muy buenos días");
+}
+
+saludar();
+this.saludar();
+
+//Las funciones pueden recibir parámetros pero sin indicar el tipo (naturalmente)
+function sumar(s1,s2){
+    console.log(s1+"+"+s2+"="+(s1+s2));
+}
+sumar(10,40);
+
+//Las funciones pueden invocarse con menos parámetros de los esperados o con mas
+
+sumar(25);//error "25+undefined=NaN"
+sumar(10,20,30,40,50);//Nuestra función ignora a partir del tercero
+
+//Podemos acceder a esos parámetros adicionales dentro de la función con la propiedad arguments
+//Y es que las funciones son objetos!
+function funcionParametrosVariables(p1,p2){
+
+    for(let a=0; a<arguments.length; a++){
+        console.log(arguments[a]);
+    }
+
+    //La variable 'a' no existe en este ámbito
+    //console.log(a);
+
+}
+
+funcionParametrosVariables('a','b','c','d','e');
+
+//Una función puede contener varios return, devolviendo éstos valor o no
+function suma2(s1,s2){
+    //return false;
+    //return true;
+
+    return s1+s2;
+}
+console.log(suma2(5,15));
+
+//Funciones nested/closures
+//Puede haber n funciones dentro de otra
+//Puede haber varios niveles de anidamiento
+console.log("==================================================");
+function imprimirDatos(p1){
+
+    function imprimir(dato){
+        console.log(dato);
+    }
+
+    imprimir(p1);
+}
+
+imprimirDatos("ojo");
+//imprimir("zas"); no podemos invocar una función nested fuera del nido
+
+//Si las funciones son objetos entonces podemos hacer este tipo de cosas
+console.log("==================================================");
+//Aquí declaramos una función y la guardamos en una variable. Pero el código
+//de la función no se ejecutará hasta que ésta se invoque
+var funcion = function(){
+    console.log("Dentro de la función");
+    return "pues nos vamos a ir a tomar un café";
+};
+
+console.log(typeof funcion);
+
+//la invocamos usando la variable
+funcion();
+//this.funcion();
+
+//Podemos marear la perdiz
+var funcion2 = funcion;
+funcion2();
+
+//Podemos declarar también las funciones declarando un objeto del tipo Function
+//No es muy recomendable
+var funcion3 = new Function("s1","s2","return s1+s2;");
+
+console.log(funcion3(250,300));
+
+</script>
+
+<body>
+
+    <h1>Funciones</h1>
+
+</body>
+</html>

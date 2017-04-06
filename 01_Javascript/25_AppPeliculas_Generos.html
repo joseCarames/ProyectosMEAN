@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">    
+    <title>Insert title here</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+</head>
+
+<script type="text/javascript" src="jquery.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript">
+
+let Genero = {   'id'           : null,
+                 'nombre'       : null,
+                 'descripcion'     : null,
+                };
+Genero.inicializar = function(id,nombre,descripcion){
+    this.id = id;
+    this.nombre = nombre;
+    this.descripcion = descripcion;
+};
+
+let idGeneroSel = null; 
+
+function insertarGenero(){
+    let nombre = $("#nombre").val();
+    let descripcion = $("#descripcion").val();
+
+    //let genero = {'id': idGenero};
+
+    var genero = Object.create(Genero);
+    genero.inicializar(null,nombre,descripcion);
+    var json = JSON.stringify(genero);
+
+    $.ajax({ 'type'        : 'post',
+             'url'         : 'servicios/generos',
+             'success'     : enviarPeticionListarGeneros,
+             'error'       : function(){alert("error")},
+             'contentType' : 'application/json; charset=utf-8',
+             'data'        : json
+            });
+
+};
+
+function seleccionarGenero(id){
+    
+    $("#genero_"+idGeneroSel).removeClass("success");
+
+    
+    idGeneroSel = id;
+    $("#genero_"+id).addClass("success");
+
+    $("#btnBorrar").prop("disabled",false);//con jQuery
+    $("#btnModificar").prop("disabled",false);
+    $("#btnInsertar").prop("disabled",true);
+    
+    $.ajax({
+             'url' : 'servicios/generos/'+id,
+             'success'     : rellenarFormularioGenero,
+             'error'       : function(){alert("error")}
+            });
+
+};
+
+function rellenarFormularioGenero(genero){
+    $("#nombre").val(genero.nombre);//esto se va poner en el value de los option
+    $("#descripcion").val(genero.descripcion);
+};
+
+function modificarGenero(){
+    if(idGeneroSel != null){
+        let genero = Object.create(Genero);
+        genero.inicializar(idGeneroSel,
+                             $("#nombre").val(),
+                             $("#descripcion").val());
+
+        let json = JSON.stringify(genero);
+        $.ajax({
+            'type'        : 'put',
+            'url'         : 'servicios/generos/',
+            'success'     : enviarPeticionListarGeneros,
+            'error'       : function(){alert("error")},
+            'contentType' : 'application/json; charset=utf-8',
+            'data'        : json
+        });
+    }
+};
+
+function borrarGenero(){
+
+    $("#btnBorrar").prop("disabled",true);//con jQuery
+    $("#btnModificar").prop("disabled",true);
+    let id = idGeneroSel; 
+    $.ajax({ 'type'    : 'delete',
+             'url'     : 'servicios/generos/'+id,
+             'success' : enviarPeticionListarGeneros,
+             'error'   : function(){alert("error")}
+            });
+    vaciarFormularioGenero()
+
+};
+
+function vaciarFormularioGenero(){
+    
+    $("#genero_"+idGeneroSel).removeClass("success");
+
+    $("#btnInsertar").prop("disabled",false);
+    $("#btnModificar").prop("disabled",true);
+    $("#btnBorrar").prop("disabled",true);
+
+    $("#nombre").val("");
+    $("#descripcion").val("");
+};
+
+function rellenarTablaGeneros(generos) {//respuesta se refiere al parámetro que devuelve la petición ajax que es la respuesta
+    let tabla = $("#tablaGeneros")[0];
+    tabla = $(tabla);//enriquecemos la tabla
+    tabla.html("");//ahora ya tiene la función html()
+
+
+    for(let a=0; a<generos.length; a++){
+        let g = generos[a];
+        $("<tr id='genero_"+g.id+"' onclick='seleccionarGenero(this.id.substring(7))'>"+
+            "<td>"+g.nombre+"</td>"+
+            "<td>"+g.descripcion+"</td>"+
+        "</tr>").appendTo(tabla);
+    }
+};
+
+
+function enviarPeticionListarGeneros(){
+    $.ajax( { 'url'     : 'servicios/generos',
+              'success' : rellenarTablaGeneros } );   
+};
+
+$(function(){
+    enviarPeticionListarGeneros();
+    
+    $("#btnInsertar").click(insertarGenero);
+    $("#btnModificar").click(modificarGenero);
+    $("#btnBorrar").click(borrarGenero);
+    $("#btnVaciar").click(vaciarFormularioGenero);
+
+    $("#btnBorrar").prop("disabled",true);//con jQuery
+    $("#btnModificar").prop("disabled",true);
+});
+
+</script>
+<body>
+
+    <div class="page-header">
+        <h1>Base de datos de películas</h1> 
+    </div>
+
+    <!--<div class="navbar navbar-inverse">-->
+    <div class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+            <a class="navbar-brand" href="#">WebSiteName</a>
+            </div>
+            <ul class="nav navbar-nav">
+            <li><a href="#">Home</a></li>
+            <li><a href="25_AppPeliculas_Peliculas.html">Películas</a></li>
+            <li class="active"><a href="#">Géneros</a></li>
+            <li><a href="#">Actores</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-1"></div>  
+        <div class="text-center col-xs-10">  
+            <input type="button" id="btnInsertar"  class="btn btn-primary" value="Insertar"/>
+            <input type="button" id="btnModificar" class="btn btn-primary" value="Modificar"/>
+            <input type="button" id="btnBorrar"    class="btn btn-primary" value="Borrar"/>
+            <input type="button" id="btnVaciar"    class="btn btn-primary" value="Vaciar"/>
+        </div>
+        <div class="col-xs-1"></div>  
+    </div>
+
+    <br/>
+
+    <div class="row">
+        <div class="col-xs-1"></div>
+        <div class="col-xs-10 form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-xs-2" for="genero">Género</label>
+                <div class="col-xs-8">
+                    <input type="text" id="nombre" class="form-control" />
+                </div>
+            </div>  
+            <div class="form-group">
+                <label class="control-label col-xs-2" for="descripcion">Descripción</label>
+                <div class="col-xs-8">
+                    <input type="textArea" id="descripcion" class="form-control" />
+                </div>
+            </div>    
+        <div class="col-xs-1"></div>        
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-1"></div>  
+        <div class="col-xs-10">  
+            <table class="table table-hover table-striped">
+                <thead>
+                    <th>Género</th>
+                    <th>Descripción</th>
+                </thead>
+                <tbody id="tablaGeneros"></tbody>
+            </table>
+        </div>
+        <div class="col-xs-1"></div>  
+    </div>
+
+    <div>
+        <h5>Este esperamos que sea el pie</h5> 
+    </div>
+
+</body>
+</html>

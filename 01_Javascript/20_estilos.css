@@ -1,0 +1,136 @@
+/*Selectores*/
+/*Cualquier cosa que haya en la página*/
+* {
+    color: blue;
+
+}
+/*Selector por etiqueta*/
+h1 {
+    color:#fabada;
+}
+
+h5 {
+    color:grey;
+}
+
+/*Por identificador (id)*/
+#cabecera {
+    background-color: lightblue;
+    height: 75px; /*dimensión absoluta*/
+}
+
+/*Selectores de clase*/
+.botonera {
+    background-color: #AABBAA;
+    width: 50%;
+}
+/*Agrupando selectores*/
+table, .botonera, .formulario {/*AND: los que sean table y tengan la clase botonera*/
+    width        : 500px;
+    border       : 1px;
+    border-style : solid;
+    border-color : black;
+    margin-top   : 10px;
+    margin-left   : auto;
+    margin-right   : auto;
+}
+
+/*Jerarquía: selectores de hijos*/
+div label {/*los label que estén dentro de div*/
+    color: green;
+}
+
+/*
+div > label { } Descendiente directo
+div + p{ } Adyacente, tiene que estar seguido
+div ~ p { } Selector de hermanos(todos los p que haya en el div)
+*/
+/*Selector de atributos*/
+[obligatorio] {
+    border-color:orange;
+}
+
+/*Pseudo clases. Para cuando el elemento tiene más de un estado y queremos que se vea diferente en cada uno de ellos
+:visited
+:hover
+:focus
+:link
+
+input:disabled
+input:checked
+
+*/
+
+a {
+    color: green;
+    text-decoration:none;
+}
+
+a:hover {
+    color: lightgreen;
+    text-decoration:none;
+}
+
+/*a:visited {
+    color: red;
+    text-decoration:none;
+}*/
+
+a:focus {
+    color: yellow;
+    text-decoration:none;
+}
+
+/*Maquetación con css*/
+
+#contenedor { /*va a representar el 100% de la pantalla*/
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*Repetimos cabecera*/
+#cabecera {
+    background-color : lightgreen;
+    width            : 100%;
+    height           : 75px;
+}
+
+#menu {
+    background-color : lightblue;
+    width            : 175px;
+    height           : 400px;
+    float            : left;
+    }
+
+#contenido {
+    /*width: 80%;*/
+    background-color:lightgray;
+    text-align: center;
+}
+
+#pie {
+    clear            : left;
+    border-top       : 1px;
+    border-color     : black;
+    border-top-style : solid;
+}
+
+/*Formulario*/
+.formulario {
+    text-align: center;
+}
+
+
+label {
+    display : block; /*none, hidden, block, inline;*/
+    float: left;
+    background-color: white;
+    width:125px; /*NOOOOO porque es inline, tendrá el ancho del contenido (del texto)*/
+}
+
+
+
+
+
+

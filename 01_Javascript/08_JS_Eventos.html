@@ -1,0 +1,54 @@
+<html>
+<head></head>
+<script type="text/javascript">
+
+function botonPulsado(){   
+    alert("HOLA");
+}
+
+function validarFormulario(evento){
+    alert("validando...");
+    //Cancelamos el evento
+    evento.preventDefault();
+}
+
+//window.onload();//no tiene este evento
+/*Le añadimos una función al evento onload()
+var funcion = function(){
+    alert("on load");
+};
+window.onload = funcion;
+*/
+//lo hacemos más corto
+window.onload = function(){
+    console.log("On load");
+    
+    let boton = document.getElementById("boton");
+    boton.onclick = function(){
+        botonPulsado();
+    };
+    
+    let enviar = document.getElementById("enviar");
+    //hacemos referencia al evento que nos pasan por parámetro
+    enviar.onclick = function(evento){//recibimos el evento
+        console.log(evento);//lo imprimimos
+        validarFormulario(evento);//se lo pasamos a la función
+    };
+};
+
+</script>
+<body>
+    <h1 align="center">Eventos</h1>
+
+    <p align="center">
+        <input id="boton" type="button" value="DALE"/> <!--onclick="botonPulsado()"/>-->
+    </p>
+
+    <form action="xxx">
+        <p align="center">
+            <input type="submit" id="enviar" value="Enviar" />
+        </p>
+    </form>
+
+</body>
+</html>

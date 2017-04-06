@@ -1,0 +1,117 @@
+<html>
+<head></head>
+
+<script type="text/javascript">
+
+function documentWrite(){
+
+    document.write("<h1>Usando document.write()</h1>");
+    document.write("<h1>Segunda línea</h1>");
+
+}
+
+//innerHTML hace lo mismo que write pero en partes consretas del documento
+function _innerHTML(){
+    let div = document.getElementById("div1");
+    div.innerHTML = "<h2 align='center'>HOLA</h2>";//saldrá hola en el div
+}
+
+function vaciarConInnerHTML(){
+    let div = document.getElementById("div1").innerHTML = "";
+}
+
+function crearNodos(){
+
+    //Creando nodos
+    let tabla = document.createElement("table");
+    let tr = document.createElement("tr");
+    let td = document.createElement("td");
+    let txt = document.createTextNode("texto");
+
+    //Añadiendo atributos a los nodos
+    //Método largo
+    let att = document.createAttribute("align");
+    att.value = "center";
+    tabla.setAttributeNode(att);
+
+    //Método corto
+    tabla.setAttribute("border","1");
+
+    //Construyendo la jerarquía de los nodos
+    td.appendChild(txt);
+    tr.appendChild(td);
+    tabla.appendChild(tr);
+    let div = document.getElementById("div2");
+    div.appendChild(tabla);
+
+}
+
+function vaciarSelect(){
+
+    let nodo = document.getElementById("ciudades");
+
+    //Podríamos vaciarlo así
+    nodo.innerHTML = "";
+
+    //Cada nodo tiene un array de hijos
+    //Es una propiedad
+    let hijos = nodo.childNodes;
+    hijos.length = 0;
+    let tam = hijos.length;
+    for(let a=0;a<tam;a++){
+        let hijo = hijos[0];//eliminamos el primero porque al ser dinámico el array va cambiando de tamaño y
+        //llega un momento en el que se intenta borrar una posición que está fuera del array  
+        //Podemos decirle al padre que elimine al hijo
+        nodo.removeChild(hijo);
+    }
+
+    //También podemos acceder al nodo padre de cualquier nodo
+    //nodo.parentNode.removeChild(nodo); //Esto eliminaría el select
+    //Y también el propio nodo se puede eliminar así mismo
+    //nodo.remove();
+
+
+}
+
+</script>
+
+<body>
+    <marquee>
+        <h1>
+            <font color="lightGreen">
+                DHTML
+            </font>
+        </h1>
+    </marquee>
+
+    <hr/>
+
+    <p align="center">
+
+        <input type="button" value="document.write" onclick="documentWrite()" />
+        <input type="button" value="innerHTML" onclick="_innerHTML()" />
+        <input type="button" value="Vaciar innerHTML" onclick="vaciarConInnerHTML()" />
+        <input type="button" value="Crear nodos" onclick="crearNodos()" />
+        <input type="button" value="Vaciar select" onclick="vaciarSelect()" />
+
+    </p>
+
+    <hr/>
+
+    <div id="div1"></div>
+    <div id="div2"></div>
+
+    <hr/>
+    <p align="center">
+        <select id = "ciudades">
+            <option value="León">León</option>
+            <option value="Valladolid">Valladolid</option>
+            <option value="Burgos">Burgos</option>
+            <option value="Soria">Soria</option>
+            <option value="Palencia">Palencia</option>
+            <option value="Ávila">Ávila</option>
+        </select>
+    </p>
+
+</body>
+</html>

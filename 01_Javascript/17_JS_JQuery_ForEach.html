@@ -1,0 +1,59 @@
+<html>
+<head></head>
+
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+    
+$(function(){
+    pruebas();    
+});
+
+function pruebas(){
+    $("h2");//Nos devuelve un objeto JQuery con todos los nodos de la página
+    //Éste es más específico
+    $("[id^=color-]")
+    //Más específico aún
+    //$("h2 [id^=color-]")//jerarquía: los que estén dentro de un h2
+    //$("h2,[id^=color-]")//OR
+    //Función 'each'. Definimos una función que pasamos por parámetro y JQuery se encarga 
+    //de invocarla para cada nodo de la lista 
+    $("h2[id^=color-]").each(function(){//AND: que sean h2 y que tengan ese ID (que empiecen por ese ID)
+        console.log(this.innerHTML);
+        //this.text("HOLA");//ésto falla porque this es un árbol normal del árbol DOM
+
+        //Si le pasamos a la función $ un nodo, lo extiende añadiéndole todas las funciones JQuery
+        let nodoExtendido = $(this);
+        console.log(nodoExtendido.text());//text() te devuelve los nodos de texto que haya dentro
+
+        let texto = this.innerHTML;
+        if(texto == "Rojo"){
+            nodoExtendido.css("color","red");
+        } else if(texto == "Verde"){
+            nodoExtendido.css("color","green");
+        }else if(texto == "Azul"){
+            nodoExtendido.css("color","blue");
+        }else if(texto == "Amarillo"){
+            nodoExtendido.css("color","yellow");
+        }else if(texto == "Fabada"){
+            nodoExtendido.css("color","#FABADA");
+        }
+
+        //Si la función devuelve false se detiene el bucle
+
+    });
+}
+
+</script>
+<body>
+
+    <h1>JQuery for each</h1>
+    <input type="button" value="Dale" onclick="pruebas"/>
+    <h2 id="color-1">Rojo</h2>
+    <h2 id="color-2">Verde</h2>
+    <h2 id="color-3">Azul</h2>
+    <h2 id="color-4">Amarillo</h2>
+    <h2 id="color-5">Fabada</h2>
+   
+
+</body>
+</html>

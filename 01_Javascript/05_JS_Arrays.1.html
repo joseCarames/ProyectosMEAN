@@ -1,0 +1,153 @@
+<html>
+<head>
+
+</head>
+
+<script type="text/javascript">
+
+//Un array es un objeto
+//Tiene propiedades y funciones
+//No tiene un tamaño fijo
+var array = [];
+
+var array1 = [1,2,3,4,5];
+
+//Pueden guardar cualquier tipo
+var array2 = [10,"20",30.5,true,"tocotó"];
+
+//Accediendo a las posiciones de un array 
+console.log(array2[4]);
+
+//Guardamos algo en una posición lejana
+array2[50]=500;
+//sin problema, rellena lo intermedio con undefined
+console.log(array2[50]); //imprime 
+
+//Tiene propiedades y funciones
+console.log("Número de elementos de array2: "+array2.length);// imprime 51
+
+//Funciones para utilizar un array como una cola FIFO
+console.log(array1);
+array1.push(6);//Añade eñ 6 al final
+console.log(array1);
+var primerElemento = array1.shift(); //Elimina el primer elemento
+console.log(array1);
+var ultimoElemento = array1.pop(); //Elimina el último elemento
+console.log(array1);
+
+//También podemos crear el array con un new pero no se recomienda
+var array3 = new Array();
+var array4 = new Array(11,22,33);
+
+//Añadiendo valores después de la creación
+array4[3] = 44;
+console.log(array4.length+":"+array4);
+
+//Añadimos más allá de su tamaño
+array4[10] = 55;
+//sin problema, rellena lo intermedio con undefined
+console.log(array4.length+":"+array4);
+
+//Arrays asociativos (parecido a los mapas de Java)
+var array5 = [];// Ésto es un array
+array5[0] = 111;
+array5[1] = 222; //Hasta aquí sigue siendo un array
+//En el momento en el que usamos una clave no numérica el array se convierte
+//en un array asociativo()
+
+array5["marca"] = "Ford";
+array5["modelo"] = "Focus";
+array5["saludar"] = function(){ alert("PI PI"); };
+
+array5[7] = 8;
+
+array5["nombre"]="pepe";
+
+console.log(array5);
+console.log(array5.length);//creo que te da el tamaño del array hasta el último valor 
+
+
+
+//Cuando definamos nuestros propios objetos usaremos arrays asociativos
+//Un array asociativo no está indexado
+console.log("========================================================");
+console.log(array5.length);//Las funciones de array tienen un resultado impredecible 
+                           //si se transforma en un array asociativo
+console.log(array5["marca"]);//Dos maneras de acceder al valor asociado a una clave
+console.log(array5["modelo"]);//Ésta es más "orientada a objetos"
+
+//Recorriendo arrays
+
+//Con un for normal
+console.log("=========================================================");
+var array6 = [11,22,33,44,55,66,77,88,99];
+for(escort = 0; escort<array6.length; escort++){
+    console.log(array6[escort]);
+}
+
+//Con un for each: for each es una función que recibe otra que lo aplica por cada elemento
+//No es muy eficiente
+array6.forEach(function(elem){
+    console.log(":"+elem);          
+    } );
+
+//Lo podemos hacer de una manera más legible
+var funcion = function(elem){
+    console.log("::"+elem);
+};
+array6.forEach(funcion);
+
+//Esto va más rápido pero nos da igual
+for(transit=0; transit<array6.length; transit++){
+    funcion(array6[transit]);
+}
+
+//La función forEach así como recorrer un array con un for
+//solo funciona con arrays, no con arrays asociativos
+
+var array7 = new Array();
+array["nombre"] = "Bart";//Ahora es un array asociativo
+array7["direccion"]="C/Evergreen Terrace";
+array7["telefono"]="555";
+
+//Si tenemos claro que vamos a crear un array asociativo, esta sintáxis es la más adecuada:
+//NO es un JSON
+var array7bis = {"nombre"    : "Bender",
+                 "direccion" : "NNY",
+                 "telefono"  : "555"};
+
+//var noseque = "{'nombre':'bender', '':'','',''}";Esto si es un JSON (un String)
+
+console.log("=========================================================");
+array7.forEach(function(elem){
+    console.log(":"+elem);          
+    } );
+
+//Para extraer los valores de un array asociativo debemos usar un for-in
+//for(clave in array/array asociativo/object)
+
+// array7.nombre;
+// array7.direccion;
+// array7["telefono"];
+
+for(let clave in array7bis){
+    console.log("Clave:"+clave+", valor: "+array7bis[clave]);
+}
+
+//Recorriendo un array con un for in
+//Como hay varias posiciones undefined, se las salta
+//array4 tiene un 'hueco' entre las posiciones 5 y 10
+for(let clave in array4){
+    console.log(array4[clave]);//imprime 11 22 33 44 55 cada uno en una línea
+}
+
+
+</script>
+
+<body>
+
+    <h1>Arrays</h1>
+
+</body>
+
+</html>

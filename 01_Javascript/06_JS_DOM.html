@@ -1,0 +1,163 @@
+<html>
+<head>
+</head>
+<script type="text/javascript">
+
+//En javascript disponemos del objeto 'document' que representa al árbol DOM
+
+// alert("Molesto?")
+//No podemos acceder al árbol DOM desde código JS que está fuera de una función. Ya que se ejecuta antes de que se ejecuta 
+//antes de que el navegador cree el árbol DOM
+console.log(document.getElementById("nombre"));//null
+
+function pruebasDOM(){
+    console.log("===========================================");
+    let nodo = document.getElementById("nombre");
+    console.log(typeof nodo);//object
+    
+    //Los nodos del árbol son objetos JS con muchas propiedades y funciones
+    for(let clave in nodo){
+        console.log("c:"+clave+", v:"+nodo[clave]);
+    }
+    //busca el nodo con ese nombre
+    //document.getElementByName("name");
+    //devuelve los elementos del tipo de la etiqueta, devuelve un array
+    //document.getElementByTagName("input");
+    //devuelve todos los elementos que tengan un estilo CSS
+    //document.getElementByClassName("estilo");
+
+    //sirve para analizar los elementos de un xml
+    // document.getElementsByTagNameNS("etiqueta xml");
+
+    //Propiedades de los nodos
+    nodo = document.getElementById("nombre");
+    console.log(nodo.value);
+
+    var valor = document.getElementById("nombre").value;
+    console.log(typeof nodo);
+    console.log(typeof valor);
+
+    //Árbol DOM
+    console.log("===========================================");
+    let formulario = document.getElementById("formulario");
+    console.log(formulario);
+    //Los nodos tienen un array de hijos
+    //Este array es una PROPIEDAD, no una función ni un método get
+    let hijos = formulario.childNodes;
+    for(let a = 0; a<hijos.length; a++){
+        console.log("Hijos:"+hijos[a]);
+    }
+
+}
+//función que valida que todos los campos estén rellenos
+function validar(){
+
+    let nombre, direccion, telefono;
+    nombre = document.getElementById("nombre").value.trim();//con trim evitamos que pulsen el espacio
+    direccion = document.getElementById("direccion").value.trim();
+    telefono = document.getElementById("telefono").value.trim();
+
+    if(nombre == ""){
+        alert("El nombre es obligatorio");
+    }
+    if(direccion == ""){
+        alert("La dirección es obligatoria");
+    }
+    if(telefono == ""){
+        alert("El teléfono es obligatorio");
+    }
+
+    let formulario = document.forms.formulario;//aquí nos referimos al 'name'
+    formulario = document.getElementById("formulario");
+
+    console.log(formulario.nombre.value);//nombre es una propiedad de formulario y tiene valor
+    console.log(formulario.direccion.value);
+    console.log(formulario.telefono.value);
+
+    //with: nos permite ahorrar texto
+    with(formulario){
+        console.log(nombre.value);//no hace falta poner formulario.nombre.value
+        console.log(direccion.value);
+        console.log(telefono.value);
+
+    }
+
+    let persona = {"nombre" : "M.A. Baracus",
+                   "direccion" : "La furgo",
+                   "hablar" : function(){
+                        alert("Yo no vuelo con ese loco!")
+                   }};
+
+    with(persona){
+        console.log(nombre);
+        console.log(direccion);
+        hablar();
+    }
+
+
+}
+
+//función que prepare los parámetros de un formulario genérico
+function prepararParametros(){
+    console.log("===========================================");
+    let nodos = document.getElementsByTagName("input");
+    let parametros = "";
+
+    for(let a=0; a<nodos.length; a++){
+        let nodo = nodos[a];
+        console.log(nodo.name);
+        //if(nodo.type == "text"){
+        if(nodo.name.trim() != ""){
+            console.log(nodos[a]);
+
+
+            //parametros.concat("noseque");
+            //concatenamos los valores de las cajas de texto para mandarlos al pulsar submit
+            parametros = parametros + nodo.name + "=" + nodo.value + "&";
+
+            //quitamos el último & con substring
+            parametros = parametros.substring(0,parametros.length-1);
+        }
+    }
+
+    alert(parametros);
+    return parametros;
+
+}
+
+
+</script>
+<body onload="pruebasDOM()">
+    <h1>Ejemplo del árbol DOM</h1>
+    
+    Nombre: <input type="text" name="nombre2" id="nombre2" size="25" value="texto"/>
+    
+    <hr/>
+    
+    <form name="formulario" id="formulario" action="#" method="GET"> 
+        <input type="button" name="accion" value="Enviar" onclick="validar()"/>
+        <input type="button" value="Preparar parámetros" onclick="prepararParametros()"/>
+        <table>
+
+            <tr>
+                <td>Nombre</td>
+                <td>
+                    <input type="text" name = "nombre" id = "nombre"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Dirección</td>
+                <td>
+                    <input type="text" name = "direccion" id = "direccion"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Teléfono</td>
+                <td>
+                    <input type="text" name = "telefono" id = "telefono"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

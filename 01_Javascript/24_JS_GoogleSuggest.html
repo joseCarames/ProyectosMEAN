@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">    
+    <title>Insert title here</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+</head>
+
+<script type="text/javascript" src="jquery.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript">
+
+function enviarPeticionAutocompletar(campo){
+    
+    if($("#"+campo)[0].value.trim().length < 1 ){//comprobamos que la longitud de lo que escribe el 
+        return;                                  //usuario sea mayor que 1, si no no hace la petición
+    }
+    
+    let parametros = "campo="+campo+"&valor="+$("#"+campo).val().trim();
+    $.ajax({ 'url'     : 'servicios/autocompletar?'+parametros,
+             'success' : rellenarSugerencias,
+             'error'   : function(){alert("error")}
+           });
+
+};
+
+function rellenarSugerencias(respuesta){
+
+    //la respuesta es: "ciudad|salamanca|chicnchón|madrid...."
+
+    let trozos = respuesta.split("|");
+    let campo = trozos[0];//el primer elemento de la respuesta es el campo ciudad
+
+    //$("#sugerencias_ciudad");
+    let div = $("#sugerencias_"+campo)[0];//Ésto devuelve un nodo DOM estándar
+    div=$(div);
+    div.html("");//lo vaciamos
+    //div.innerHTML = "";
+    
+    sugSel = 0;
+    numSug = trozos.length-1;//ya que hay que quitarle el primer campo (ciudad)
+
+    //$("#sugerencias_ciudad").html("");//vaciamos el div
+    for(let a=1;a<trozos.length;a++){//recorremos el array con las sugerencias
+        let id = campo+"_"+a; //damos un id único
+        
+        //Podríamos hacerlo así
+        /*let html = $("<div id='"+id+"' onclick='XXX' onmouseover='YYY' onmouseout='ZZZ'>"+
+                        trozos[a]+
+                     "</div>");
+        
+        $(html).appendTo(div);
+        */
+        
+        //Pero lo vamos a hacer asá
+        // console.log("1:"+$("<div id='"+id+"'>"+trozos[a]+"</div>"));//1:[object Object]
+        // console.log("2:"+$("<div id='"+id+"'>"+trozos[a]+"</div>")[0]);//2:[object HTMLDivElement]
+        /*
+        let sugerencia = $("<div id='"+id+"'>"+trozos[a]+"</div>")[0];//nodo DOM con las funciones onclick, onmouseover, onmouseout
+        //con JavaScript
+        sugerencia.onclick = function(){
+            console.log("CLICK");
+        };
+        
+        sugerencia = $(sugerencia);//ahora obtenemos un objeto jQuery y podemos usar las funciones click,mouseover o mouseout
+        //con jQuery
+        sugerencia.mouseover(function(){
+            //console.log("MOUSE OVER");
+            //this.style = "background-color:lightGreen";//con JavaScript
+            $(this).css("background-color","lightGreen");//con jQuery
+        });
+        
+        sugerencia.mouseout(function(){
+            //console.log("MOUSE OUT");
+            $(this).css("background-color","white");//con jQuery
+        });
+
+        sugerencia.click(function(){
+            //Obtenemos el texto con JavaScript
+            // this.innerHTML
+            // this.childNodes[]
+
+            //con jQuery
+            let texto = $(this).text();
+            $("#"+campo).val(texto);
+        });
+        */
+        //Al más puro estilo jQuery
+        let sugerencia = $("<div id='"+id+"'>"+trozos[a]+"</div>");
+        sugerencia.click (function(){
+            let texto = $(this).text();
+            $("#"+campo).val(texto);
+            $("#sugerencias_"+campo).html("");
+        });
+        sugerencia.mouseover(function(){
+            $("#"+campo+"_"+sugSel).css("background-color","white");
+            sugSel = a; 
+            $(this).css("background-color","lightGreen");
+        });
+        sugerencia.mouseout(function(){
+            $(this).css("background-color","white");
+        });
+
+        sugerencia.appendTo(div);
+    }
+};
+
+let idTimer = null;
+function programarTemporizadorPeticion(campo){
+    
+    //vamos cancelando las peticiones
+    if(idTimer != null){
+        clearTimeout(idTimer);
+    }
+    //setTimeout: temporizador, se le pasa una función y el tiempo en milisegundos
+    idTimer = setTimeout(function(){
+                   enviarPeticionAutocompletar(campo);
+               }, 500);//Milisegundos
+    
+};
+
+//Sugerencia que está seleccionada ahora mismo con el teclado
+let sugSel;
+
+//Número de sugerencias que se muestran ahora mismo
+let numSug;
+
+
+function leerTeclado(campo,evento){
+    //mirar si se pulsan los cursores o el intro
+    console.log(evento.keyCode)
+    let keyCode = evento.keyCode;
+
+    switch(keyCode){
+        case 38 : //Para arriba
+                  $("#"+campo+"_"+sugSel).css("background-color","white");
+                  if(sugSel>1){
+                      sugSel--;
+                  }
+                  $("#"+campo+"_"+sugSel).css("background-color","yellow");
+
+                  break;
+        case 40 : //Para abajo
+                  $("#"+campo+"_"+sugSel).css("background-color","white");
+                  if(sugSel<numSug){
+                    sugSel++;
+                  }
+                  $("#"+campo+"_"+sugSel).css("background-color","yellow");
+                  break;
+                 
+        case 13 : //Para dentro (intro)
+                  let nodo = $("#"+campo+"_"+sugSel)[0];
+                  nodo.click();
+                  break;
+        
+        default: programarTemporizadorPeticion(campo);    
+                 
+    }
+     
+};
+
+$(function(){
+    $(":text").keyup(function(evento){//cogemos el evento
+        // console.log(tecla);
+        leerTeclado('ciudad',evento);//se lo pasamos a leerTeclado
+    });
+});
+
+</script>
+<body>
+    Ciudad
+    <input type="text" id="ciudad"/>
+    <div id="sugerencias_ciudad">
+    
+    <!--Cliente
+    <input type="text" id="cliente"/>
+    <div id="sugerencias_cliente">
+        
+    </div>-->
+</body>
+</html>

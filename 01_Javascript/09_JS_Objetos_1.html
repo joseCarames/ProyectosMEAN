@@ -1,0 +1,157 @@
+<html>
+    <head></head>
+<script type="text/javascript">
+
+//Una función es un objeto
+//Una función puede definir el prototipo un objeto 
+
+//CREANDO UN PROTOTIPO
+//Creamos un prototipo de Cliente
+//Le añadimos propiedades 'públicas'
+function Cliente(){
+    //Añadimos las propiedades al objeto de tipo function que se llama 'Cliente'
+    this.nombre    = "";
+    this.direccion = "";
+    this.telefono  = "";
+}
+
+//CREANDO OBJETOS
+//Para crear un nuevo objeto usando el prototipo usamos 'new'
+let c1 = new Cliente();
+c1.nombre = "Bart J. Simpson";
+c1.direccion = "C/Evergreen Terrace";
+c1.telefono = "555";
+console.log("c1:"+c1.nombre);
+console.log("c1:"+c1.direccion);
+console.log("c1:"+c1.telefono);
+
+//Creamos otro objeto
+let c2 = new Cliente();
+c2.nombre = "Philip J. Fry";
+c2.direccion = "C/Los Angeles";
+c2.telefono = "888";
+console.log("c2:"+c2.nombre);
+console.log("c2:"+c2.direccion);
+console.log("c2:"+c2.telefono);
+
+//AÑADIENDO FUNCIONES 
+//Con prototype añadimos una función a un objeto concreto de tal manera que el resto de objetos 
+//construidos a partir de él lo tienen (incluso aunque se hayan creado antes de añadir la función)
+console.log("=======================================================")
+Cliente.prototype.imprimirDatos = function(){
+    console.log(this.nombre+","+this.direccion+","+this.telefono);
+}
+//los objetos c1 y c2 también tendrán ahora la función
+c1.imprimirDatos();
+c2.imprimirDatos();
+
+//También podemos añadir una función a un objeto concreto
+c2.saltar = function(){
+    console.log("Soy "+this.nombre+" y salto");
+}
+
+c2.saltar();
+//c1.saltar(); Da error porque c1 no tiene la función saltar
+
+//'CONSTRUCTORES'
+//Podemos aprovechar que las funciones reciben parámetros Para
+//obtener un constructor (y solo uno)
+
+function Coche(marca, modelo, matricula){
+    this.marca = marca;
+    this.modelo = modelo;
+    this.matricula = matricula;
+
+}
+
+let ch1 = new Coche();
+let ch2 = new Coche("Renault","5","M-1234-BC");
+console.log("ch2:"+ch2.marca);
+console.log("ch1:"+ch1.marca);//undefined
+
+//FUNCIONES DEFINIDAS DENTRO DEL PROTOTIPO
+function Libro(titulo,autor){
+    this.titulo = titulo;
+    this.autor = autor;
+
+    //Los objetos creados a partir de éste tendrán una copia de las funciones de éste objeto 
+    //a diferencia de cuando lo hacemos con Objeto.prototype.nombreFuncion = function{...
+
+    //Funciones 'privadas'
+    function x(){
+        alert("X");
+    };
+
+    //Funciones 'públicas'
+    this.imprimir = function(){
+        alert("imprimir");
+        x();//Ok pq lo llamamos desde dentro del Objeto
+    };
+
+}
+
+let l1 = new Libro("El Quijote","Cervantes");
+l1.imprimir();//OK
+//l1.x(); Da error porque se llama desde fuera del Objeto
+
+//PORPIEDADES 'PRIVADAS'
+function Avion(){
+    //Propiedad pública: se usa 'this'
+    this.fabricante = "";
+    //Propiedad 'privada': no se usa 'this'
+    let modelo = "";//o con 'var'
+
+    //Si queremos controlar el acceso a l apropiedad privada 
+    //añadiremos funciones accesoras
+    //En realidad hablamos de Encapsulamiento
+    this.setModelo = function(_modelo){
+        modelo = _modelo;//no podemos usar this,modelo porque lo hemos declarado con let y no lo vemos desde aquí
+    };
+    this.getModelo = function(){
+        return modelo;
+    };
+}
+
+let a1 = new Avion();
+a1.fabricante = "Airbus";
+a1.setModelo("A380");
+console.log("a1:"+a1.fabricante+","+a1.getModelo());
+console.log(a1.modelo);//undefined
+
+function Animal(nombre){
+    //Propiedades 'estáticas'
+    //Se añaden a la función (la función es un objeto)
+    //Si no ponemos este if contador se redefinirá cada vez que hagamos new Animal()
+    if(typeof Animal.contador == 'undefined'){
+        Animal.contador = 0;
+    }
+    Animal.contador = Animal.contador+1;
+
+    alert("ANIMAL:"+Animal.contador);
+
+    //Propiedades 'públicas'
+    this.nombre = "";
+    this.peso = 0;
+    //Propiedades 'privadas'
+    var x = "";
+}
+
+//Podemos también añadir propiedades estáticas a posteriori
+Animal.datoEstatico = 0;
+animal1 = new Animal("animal1");
+animal1 = new Animal("animal2");
+animal1 = new Animal("animal3");
+
+console.log(":"+animal1.nombre);
+console.log(":"+animal1.contador);//Undefined
+//Para acceder a la propiedad estática usamos el nombre de la función ('clase' ejem)
+console.log("Contador:"+Animal.contador);
+
+
+</script>
+
+
+<body>
+
+</body>
+</html>

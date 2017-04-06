@@ -1,0 +1,263 @@
+<html>
+<head></head>
+
+<script>
+
+//Definir el prototipo de Pelicula
+//id
+//titulo
+//director
+//genero
+
+//función que hace un console.log con los datos de la película
+//(más adelante) una función que devuelve un <tr> con los datos de la película
+
+//Array blobal a la página que guarda la lista de películas
+let peliculas = [];
+let idPeliculaSel = null;
+
+//Prototipo de Pelicula
+function Pelicula(titulo, director, genero){
+    // if(typeof Pelicula.contador == undefined){
+    //     Pelicula.contador = 0;
+    // }
+    //contador va a pertenecer al Objeto Pelicula, no a sus 'instancias', es 'estático'
+    Pelicula.contador = Pelicula.contador+1;
+    
+    this.id = Pelicula.contador;
+    this.titulo = titulo;
+    this.director = director;
+    this.genero = genero;
+    //Añadimos la función que se creará en todas las instancias, mejor hacerlo con Prototype, que acceden todas a la misma
+    // this.imprimirConsola() = function(){
+    //     console.log(this);
+    // }
+
+}
+Pelicula.contador = 0;//Inicializamos el contador
+Pelicula.prototype.imprimirConsola  = function(){
+    console.log(this);
+}
+
+let p1 = new Pelicula("pelicula1","director1","CiFi");
+let p2 = new Pelicula("pelicula2","director2","Comedia");
+let p3 = new Pelicula("pelicula3","director3","Acción");
+let p4 = new Pelicula("pelicula4","director4","Aventura");
+
+peliculas.push(p1);
+peliculas.push(p2);
+peliculas.push(p3);
+peliculas.push(p4);
+
+function rellenarTabla(){
+    let tabla = document.getElementById("tablaPeliculas")
+    //Creando nodos
+    for(let a = 0; a<peliculas.length;a++){
+
+        let p = peliculas[a];
+
+        let tr = document.createElement("tr");
+        tr.setAttribute("id",""+p.id);
+        //tr.id = p.id; tambiéin se puede hacer así
+        let td1 = document.createElement("td");
+        let td2 = document.createElement("td");
+        let td3 = document.createElement("td");
+        let txt1 = document.createTextNode(p.titulo);
+        let txt2 = document.createTextNode(p.director);
+        let txt3 = document.createTextNode(p.genero);
+
+        //Construyendo la jerarquía de los nodos
+        td1.appendChild(txt1);
+        td2.appendChild(txt2);
+        td3.appendChild(txt3);
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+        tabla.appendChild(tr);
+        //Añadimos el evento onclick al tr
+        tr.onclick = function(){
+            seleccionarPelicula(this.id);
+            // document.getElementById("titulo").value = peliculas[tr.id-1].titulo;
+            // document.getElementById("director").value = peliculas[tr.id-1].director;
+            // document.getElementById("genero").value = peliculas[tr.id-1].genero;
+        };
+    }
+    function seleccionarPelicula(id){
+        let pelicula = buscarPelicula(id);
+
+        idPeliculaSel = id;//guardamos el id en una variable global para saber cuál es el id 
+
+        document.getElementById("titulo").value = peliculas[id-1].titulo;
+        document.getElementById("director").value = peliculas[id-1].director;
+        document.getElementById("genero").value = peliculas[id-1].genero;
+    }
+}
+function buscarPelicula(id){
+    let pelicula = null;
+    for(let a=0;a<peliculas.length;a++){
+        let p = peliculas[a];
+        if(p.id == id){
+            pelicula = p;
+            break;
+        }
+    }
+    return pelicula;
+}
+
+//rellenamos la tabla según se carga el DOM
+window.onload = function(){
+
+    //Añadimos los eventos a los botones del formulario
+    let btnInsertar = document.getElementById("btnInsertar");
+    btnInsertar.onclick = function(){
+        insertar();
+    };
+    let btnModificar = document.getElementById("btnModificar");
+    btnInsertar.onclick = function(){
+        modificarPelicula();
+    };
+    let btnBorrar = document.getElementById("btnBorrar");
+    btnInsertar.onclick = function(){
+        borrarPelicula();
+    };
+    let btnVaciar = document.getElementById("btnVaciar");
+    btnInsertar.onclick = function(){
+        vaciarFormulario();
+    };
+
+    //Rellenamos la tabla
+    rellenarTabla();
+};
+
+function validarFormulario(titulo,director,genero){
+    let ok = true;
+    document.getElementById("msjTitulo").innerHTML = "";
+    document.getElementById("msjDirector").innerHTML = "";
+    document.getElementById("msjGenero").innerHTML = "";
+    
+    if(titulo.trim().length == 0){
+        document.getElementById("msjTitulo").innerHTML = "Obligatorio";
+        ok = false;
+    }
+    if(director.trim().length == 0){
+        document.getElementById("msjDirector").innerHTML = "Obligatorio";
+        ok = false;
+    }
+    return ok;
+}
+
+function insertar(){
+    let titulo = document.getElementById("titulo").value;
+    let director = document.getElementById("director").value;
+    let genero = document.getElementById("genero").value;
+
+    //Validar título, director y género
+    if(!validarFormulario(titulo,director,genero)){
+        return;
+    }
+
+    peliculas.push(p);
+    //vaciarTabla();
+    rellenarTabla();
+
+};
+
+function modificarPelicula(){
+
+    let titulo = document.getElementById("titulo").value;
+    let director = document.getElementById("director").value;
+    let genero = document.getElementById("genero").value;
+    
+    if(!validarFormulario(titulo,director,genero)){
+        return;
+    }
+    
+    let pelicula = buscarPelicula(idPeliculaSel);
+
+    pelicula.titulo = titulo;
+    pelicula.director = director;
+    pelicula.genero = genero;
+
+    //vaciarTabla();
+    rellenarTabla();
+    
+};
+
+function borrarPelicula(){
+
+    // if(idPeliculaSel==null){
+    //     return;
+    // }
+    // peliculas[idPeliculaSel]
+
+    let posicion;
+    for(posicion=0;posicion<peliculas.length;posicion++){
+        if(peliculas[posicion].id == idPeliculaSel){
+            break;
+        }
+    }
+    for(let a=posicion; peliculas.length; a++){
+        peliculas[a] = peliculas[a+1];
+    }
+
+    rellenarTabla();
+
+};
+
+function vaciarFormulario(){
+    idPeliculaSel = null;
+    document.getElementById("titulo").value = "";
+    document.getElementById("director").value = "";
+    document.getElementById("genero").value = "";
+}
+
+function vaciarTabla(){
+    document.getElementById("tablaPeliculas").innerHTML = "";
+};
+
+
+</script>
+
+
+<body align="center">
+
+    <h1 align="center">Películas</h1>
+    <p>
+        <input type="button" id="btnInsertar" value="Insertar">
+        <input type="button" id="btnModificar" value="Modificar" >
+        <input type="button" id="btnBorrar" value="Borrar">
+        <input type="button" id="btnVaciar" value="Vaciar">
+    </p>
+    <br/>
+    <br/>
+
+    <label for ="titulo">Título: </label>
+    <input type="text" id="titulo"> <br/>
+    <span id="msjTitulo"></span>
+    <label for ="director">Director: </label>
+    <input type="text" id="director"> <br/>
+    <span id="msjDirector"></span>
+    <label for ="genero">Género: </label>
+    <select id="genero">
+        <option>Seleccione...</option>
+        <option>CiFi</option>
+        <option>Comedia</option>
+        <option>Acción</option>
+        <option>Aventura</option>
+    </select>
+    <span id="msjGenero"></span>
+
+    <hr/>
+
+    <table border="1" align="center">
+        <tr>
+            <th>Título</th>
+            <th>Director</th>
+            <th>Género</th>
+        </tr>
+        <tbody id="tablaPeliculas"></tbody>
+    </table>
+
+</body>
+
+</html>

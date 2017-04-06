@@ -1,0 +1,47 @@
+<html>
+<head></head>
+
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+    
+$(function(){
+    pruebas();    
+});
+
+function insertar(){
+    alert("Qué poquito falta...");
+
+}
+
+
+function pruebas(){
+
+    // $("#btnInsertar").click(function(){
+    //     insertar();
+    // });
+    
+    $("#btnInsertar").click(insertar);
+    //CUIDADO, si ponemos los () a insertar() no se la invoca al hacer click si no AHORA MISMO
+    //$("#btnInsertar").click(insertar());NOOOOOOOOOOOOOO
+
+    $("#btnDale").click(function(evento){
+        alert("Click en submit");
+        evento.preventDefault();
+    });
+
+}
+</script>
+<body>
+
+    <h1>JQuery Eventos</h1>
+
+    <p>
+        <form action="XXX">
+            <input type="submit" value="Dale" id="btnDale">
+            <input type="button" value="Insertar" id="btnInsertar"/>
+        </form>
+
+    </p>
+
+</body>
+</html>
